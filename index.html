@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>GST Calculator Pro | Professional Bill Generator</title>
+  <meta name="description" content="Free Professional GST Calculator & Bill Generator for Indian shops. CGST, SGST, IGST, Add/Remove GST with printable invoices." />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <h1>GST Calculator Pro</h1>
+      <p class="subtitle">Professional Bill Generator</p>
+    </div>
+    <button class="icon-btn" id="settingsBtn" title="Settings">
+      ⚙️
+    </button>
+  </header>
+
+  <main class="container">
+    <!-- Ad Placeholder Top -->
+    <div class="ad-box no-print" id="adTop">
+      <span class="ad-label">Advertisement</span>
+      <!-- Ad code paste here later -->
+      <div class="ad-placeholder">Ad Space (Top Banner)</div>
+    </div>
+
+    <!-- Calculator Section -->
+    <section class="card">
+      <h2 class="card-title">GST Calculator</h2>
+
+      <div class="form-group">
+        <label for="amount">Amount (₹)</label>
+        <input type="number" id="amount" placeholder="Enter amount" value="10000" inputmode="decimal" />
+      </div>
+
+      <div class="form-group">
+        <label for="rate">GST Rate</label>
+        <select id="rate">
+          <option value="0">0%</option>
+          <option value="5">5%</option>
+          <option value="12">12%</option>
+          <option value="18" selected>18%</option>
+          <option value="28">28%</option>
+          <option value="40">40%</option>
+          <option value="custom">Custom %</option>
+        </select>
+        <input type="number" id="customRate" class="hidden" placeholder="Enter custom rate" inputmode="decimal" />
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label for="calcType">Calculation Type</label>
+          <select id="calcType">
+            <option value="add">Add GST (Exclusive)</option>
+            <option value="remove">Remove GST (Inclusive)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="supplyType">Supply Type</label>
+          <select id="supplyType">
+            <option value="intra">Intra-State (CGST + SGST)</option>
+            <option value="inter">Inter-State (IGST)</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="calcBtn">Calculate GST</button>
+
+      <!-- Results -->
+      <div class="result-box hidden" id="resultBox">
+        <div class="result-row">
+          <span>Taxable Amount</span>
+          <strong id="taxable">₹0.00</strong>
+        </div>
+        <div class="result-row">
+          <span>CGST</span>
+          <strong id="cgst">₹0.00</strong>
+        </div>
+        <div class="result-row">
+          <span>SGST / UTGST</span>
+          <strong id="sgst">₹0.00</strong>
+        </div>
+        <div class="result-row">
+          <span>IGST</span>
+          <strong id="igst">₹0.00</strong>
+        </div>
+        <div class="result-row total">
+          <span>Total GST</span>
+          <strong id="totalGst">₹0.00</strong>
+        </div>
+        <div class="result-row grand">
+          <span>Grand Total</span>
+          <strong id="grandTotal">₹0.00</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bill Details -->
+    <section class="card">
+      <h2 class="card-title">Bill Details</h2>
+
+      <div class="form-group">
+        <label for="customerName">Customer Name (Optional)</label>
+        <input type="text" id="customerName" placeholder="Customer / Firm Name" />
+      </div>
+
+      <div class="form-group">
+        <label for="itemDesc">Item / Description (Optional)</label>
+        <input type="text" id="itemDesc" placeholder="e.g. Mobile Phone, Service Charge" />
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label for="invoiceNo">Invoice No.</label>
+          <input type="text" id="invoiceNo" placeholder="Auto" />
+        </div>
+        <div class="form-group">
+          <label for="invoiceDate">Date</label>
+          <input type="date" id="invoiceDate" />
+        </div>
+      </div>
+
+      <button class="btn btn-accent" id="generateBillBtn">Generate Bill</button>
+      <button class="btn btn-success" id="printBtn">🖨️ Print / Save as PDF</button>
+    </section>
+
+    <!-- Bill Preview -->
+    <section class="card">
+      <h2 class="card-title">Bill Preview</h2>
+      <div class="bill" id="billPreview">
+        <div class="bill-header">
+          <h2 id="billShopName">Your Shop Name</h2>
+          <p id="billShopAddress">Shop Address</p>
+          <p id="billShopPhone">Phone</p>
+          <p class="gstin"><strong>GSTIN:</strong> <span id="billGstin">Not Set</span></p>
+        </div>
+
+        <div class="bill-meta">
+          <div>
+            <strong>Invoice No:</strong> <span id="billInvoiceNo">-</span><br>
+            <strong>Date:</strong> <span id="billDate">-</span>
+          </div>
+          <div class="text-right">
+            <strong>Customer:</strong><br>
+            <span id="billCustomer">Cash Customer</span>
+          </div>
+        </div>
+
+        <table class="bill-table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th class="text-right">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="billItemDesc">Goods / Services</td>
+              <td class="text-right" id="billTaxable">₹0.00</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="bill-tax">
+          <div class="tax-row"><span>Taxable Value</span><span id="billTaxable2">₹0.00</span></div>
+          <div class="tax-row"><span>CGST</span><span id="billCgst">₹0.00</span></div>
+          <div class="tax-row"><span>SGST / UTGST</span><span id="billSgst">₹0.00</span></div>
+          <div class="tax-row"><span>IGST</span><span id="billIgst">₹0.00</span></div>
+          <div class="tax-row total"><span>Total GST</span><span id="billTotalGst">₹0.00</span></div>
+          <div class="tax-row grand"><span>Grand Total</span><span id="billGrandTotal">₹0.00</span></div>
+        </div>
+
+        <div class="bill-footer">
+          <p>Thank you for your business!</p>
+          <p class="small">This is a computer generated invoice</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ad Placeholder Bottom -->
+    <div class="ad-box no-print" id="adBottom">
+      <span class="ad-label">Advertisement</span>
+      <div class="ad-placeholder">Ad Space (Bottom)</div>
+    </div>
+
+    <footer class="footer no-print">
+      <p>Made for Indian Businesses • Free GST Tool</p>
+    </footer>
+  </main>
+
+  <!-- Settings Modal -->
+  <div class="modal hidden" id="settingsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>⚙️ Shop Settings</h2>
+        <button class="close-btn" id="closeSettings">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="shopName">Shop / Business Name *</label>
+          <input type="text" id="shopName" placeholder="e.g. Sharma Mobile Store" />
+        </div>
+        <div class="form-group">
+          <label for="gstin">GSTIN (Guest ID / GST Number)</label>
+          <input type="text" id="gstin" placeholder="22AAAAA0000A1Z5" maxlength="15" />
+        </div>
+        <div class="form-group">
+          <label for="shopAddress">Address</label>
+          <textarea id="shopAddress" rows="2" placeholder="Shop No, Street, City, State - PIN"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="shopPhone">Phone / Mobile</label>
+          <input type="tel" id="shopPhone" placeholder="9876543210" />
+        </div>
+        <p class="hint">ये details save हो जाएंगी और हर bill पर दिखेंगी।</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
